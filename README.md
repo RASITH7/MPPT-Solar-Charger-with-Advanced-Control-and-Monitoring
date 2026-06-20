@@ -14,7 +14,7 @@ This repository contains the complete source code, hardware design files, machin
 
 - **Main Controller**: STM32F407VGTX Microcontroller
 - **IoT & Communication**: ESP32
-- **Power Electronics**: DC-DC Buck/Boost Converter topology
+- **Power Electronics**: DC-DC Boost Converter topology
 - **Sensors**: Voltage and Current sensors for PV panel and Battery
 
 ## Repository Structure
