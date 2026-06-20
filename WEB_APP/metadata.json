@@ -1,0 +1,6 @@
+{
+  "name": "R | K POWER Dashboard",
+  "description": "ESP32-based MPPT solar charge controller system dashboard with real-time analytics and cooling method comparison.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

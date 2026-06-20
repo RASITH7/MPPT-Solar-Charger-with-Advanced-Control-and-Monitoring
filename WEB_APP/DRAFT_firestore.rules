@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAnonymousOrSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidTelemetry(data) {
+      return data.keys().hasAll(['timestamp', 'p_norm', 'p_cool', 'irradiance', 't_norm', 't_cool', 'v_pv', 'v_battery'])
+          && data.timestamp is string && data.timestamp.size() <= 100
+          && data.p_norm is number
+          && data.p_cool is number
+          && data.irradiance is number
+          && data.t_norm is number
+          && data.t_cool is number
+          && data.v_pv is number
+          && data.v_battery is number;
+    }
+
+    match /telemetry/{docId} {
+      allow read: if isAnonymousOrSignedIn();
+      allow create: if isAnonymousOrSignedIn() && isValidId(docId) && isValidTelemetry(incoming()) && incoming().keys().size() <= 15;
+      allow update: if isAnonymousOrSignedIn() && isValidId(docId) && isValidTelemetry(incoming()) && incoming().keys().size() <= 15;
+      allow delete: if isAnonymousOrSignedIn();
+    }
+
+    match /devices/{deviceId} {
+      allow read: if isAnonymousOrSignedIn();
+      allow create: if isAnonymousOrSignedIn() && isValidId(deviceId) && isValidTelemetry(incoming()) && incoming().keys().size() <= 15;
+      allow update: if isAnonymousOrSignedIn() && isValidId(deviceId) && isValidTelemetry(incoming()) && incoming().keys().size() <= 15;
+      allow delete: if isAnonymousOrSignedIn();
+    }
+  }
+}

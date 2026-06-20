@@ -1,0 +1,36 @@
+{
+  "entities": {
+    "Telemetry": {
+      "title": "Telemetry",
+      "description": "ESP32 MPPT Controller Telemetry Data",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string" },
+        "p_norm": { "type": "number" },
+        "p_cool": { "type": "number" },
+        "irradiance": { "type": "number" },
+        "t_norm": { "type": "number" },
+        "t_cool": { "type": "number" },
+        "v_pv": { "type": "number" },
+        "v_battery": { "type": "number" },
+        "i_pv": { "type": "number" },
+        "i_pv_norm": { "type": "number" },
+        "i_battery": { "type": "number" },
+        "i_battery_norm": { "type": "number" },
+        "p_battery": { "type": "number" },
+        "p_battery_norm": { "type": "number" }
+      },
+      "required": ["timestamp", "p_norm", "p_cool", "irradiance", "t_norm", "t_cool", "v_pv", "v_battery"]
+    }
+  },
+  "firestore": {
+    "/telemetry/{docId}": {
+      "schema": { "$ref": "#/entities/Telemetry" },
+      "description": "Historical telemetry data logs from ESP32"
+    },
+    "/devices/{deviceId}": {
+      "schema": { "$ref": "#/entities/Telemetry" },
+      "description": "Real-time state for a particular device (e.g., esp32-1)"
+    }
+  }
+}
